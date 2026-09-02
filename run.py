@@ -10,6 +10,21 @@ from tqdm import tqdm
 from depth_anything.dpt import DepthAnything
 from depth_anything.util.transform import Resize, NormalizeImage, PrepareForNet
 
+model_configs = {
+    'vitl': {'encoder': 'vitl', 'features': 256, 'out_channels': [256, 512, 1024, 1024]},
+    'vitb': {'encoder': 'vitb', 'features': 128, 'out_channels': [96, 192, 384, 768]},
+    'vits': {'encoder': 'vits', 'features': 64, 'out_channels': [48, 96, 192, 384]}
+}
+
+# encoder = 'vitl' # or 'vitb', 'vits'
+# depth_anything = DepthAnything.from_pretrained(model_configs[encoder])
+# depth_anything.load_state_dict(torch.load(f'./checkpoints/depth_anything_{encoder}14.pth'))
+
+
+# from depth_anything.dpt import DPT_DINOv2
+# depth_anything = DPT_DINOv2('vits', features=64, out_channels=[48, 96, 192, 384])
+# ckpt = torch.load('./checkpoints/depth_anything_vits14.pth')
+# depth_anything.load_state_dict(ckpt)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -30,8 +45,9 @@ if __name__ == '__main__':
     font_thickness = 2
     
     DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
-    
+
     depth_anything = DepthAnything.from_pretrained('LiheYoung/depth_anything_{}14'.format(args.encoder)).to(DEVICE).eval()
+    # depth_anything = DepthAnything.from_pretrained(model_configs[args.encoder]).to(DEVICE).eval()
     
     total_params = sum(param.numel() for param in depth_anything.parameters())
     print('Total parameters: {:.2f}M'.format(total_params / 1e6))

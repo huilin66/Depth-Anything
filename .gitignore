@@ -1,0 +1,10 @@
+*.png
+*.jpg
+*.csv
+*.pyc
+*.ply
+*.mp4
+
+.idea/
+checkpoints/
+__pycache__/
